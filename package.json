@@ -1,0 +1,30 @@
+{
+  "name": "account-bot",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf ./build",
+    "build": "babel ./src -d ./build -s",
+    "start": "node ./build/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "express-bunyan-logger": "^1.2.0",
+    "google-auth-library": "^0.9.7",
+    "googleapis": "^5.1.0",
+    "pg": "^4.5.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^3.19.3"
+  },
+  "devDependencies": {
+    "babel-cli": "~6.5.1",
+    "babel-plugin-transform-runtime": "~6.5.2",
+    "babel-preset-node5": "~10.6.0",
+    "babel-preset-stage-2": "~6.5.0",
+    "babel-register": "~6.5.2"
+  }
+}

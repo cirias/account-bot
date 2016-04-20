@@ -1,0 +1,6 @@
+parser: babel-eslint
+extends: airbnb/base
+rules:
+  no-param-reassign: 
+    - 1
+    - props: false

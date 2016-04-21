@@ -35,7 +35,10 @@ async function start(update) {
       chat_id: update.message.chat.id,
       text: `
 Hi! ${update.message.from.first_name}
-Authorize this app by visiting this url:
+Let me help you manage expenses.
+To this end, I need to access your Google Drive and Worksheets.
+I will place all the data in the sheet - 'Spreadsheet Running Account'.
+Please open this url, then send the code back to me:
 ${authUrl}
 `,
     };
@@ -74,7 +77,8 @@ function saveToken(update) {
   }).then(() => ({
     method: 'sendMessage',
     chat_id: update.message.chat.id,
-    text: `OK! You can add entry now! Example: '19.2 Books'`,
+    text: `Great! You can add new entry now! For example, sending message '19.2 Books'` +
+      ` to me will add an entry with 19.2 as value and Books as category.`,
   }));
 }
 
@@ -121,7 +125,7 @@ async function addEntry(update) {
         method: 'sendMessage',
         chat_id: update.message.chat.id,
         parse_mode: 'Markdown',
-        text: `Saved!`,
+        text: `Got it!`,
       });
     });
   });
@@ -163,7 +167,12 @@ async function controller(req, res) {
 
     res.status(200).send(reply);
   } catch (err) {
-    res.status(500).send(err);
+    req.log(err);
+    res.status(200).send({
+      method: 'sendMessage',
+      chat_id: req.body.message.chat.id,
+      text: `Oops! Something went wrong. Please try it again.`,
+    });
   }
 }
 

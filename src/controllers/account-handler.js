@@ -143,30 +143,30 @@ async function help(update) {
 }
 
 async function controller(req, res) {
+  let reply;
   try {
     const update = await createUpdate(req.body);
-    let reply;
     switch (true) {
       case update.message.text === '/start':
-        req.log.info('/start');
+        req.log.info({ route: '/start' });
         reply = await start(update);
         break;
       case update.message.text === '/help':
-        req.log.info('/help');
+        req.log.info({ route: '/help' });
         reply = await help(update);
         break;
       case /^(?!\/)/.test(update.message.text) &&
             update._user.session.state === 'unautherized':
-        req.log.info('saveToken');
+        req.log.info({ route: 'saveToken' });
         reply = await saveToken(update);
         break;
       case /^([+-]?\d+(\.\d+)?)\s+(\S+)/.test(update.message.text) &&
             update._user.session.state === 'autherized':
-        req.log.info('addEntry');
+        req.log.info({ route: 'addEntry' });
         reply = await addEntry(update);
         break;
       default:
-        req.log.info('default');
+        req.log.info({ route: 'default' });
         reply = {
           method: 'sendMessage',
           chat_id: update.message.chat.id,
@@ -175,16 +175,16 @@ async function controller(req, res) {
         };
         break;
     }
-
-    res.status(200).send(reply);
   } catch (err) {
     req.log.error(err);
-    res.status(200).send({
+    reply = {
       method: 'sendMessage',
       chat_id: req.body.message.chat.id,
       text: `Oops! Something went wrong. Please try it again.`,
-    });
+    };
   }
+  req.log.info({ reply });
+  res.status(200).send(reply);
 }
 
 export default controller;

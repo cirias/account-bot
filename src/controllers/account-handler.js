@@ -148,26 +148,37 @@ async function controller(req, res) {
     let reply;
     switch (true) {
       case update.message.text === '/start':
+        req.log.info('/start');
         reply = await start(update);
         break;
       case update.message.text === '/help':
+        req.log.info('/help');
         reply = await help(update);
         break;
       case /^(?!\/)/.test(update.message.text) &&
             update._user.session.state === 'unautherized':
+        req.log.info('saveToken');
         reply = await saveToken(update);
         break;
       case /^([+-]?\d+(\.\d+)?)\s+(\S+)/.test(update.message.text) &&
             update._user.session.state === 'autherized':
+        req.log.info('addEntry');
         reply = await addEntry(update);
         break;
       default:
+        req.log.info('default');
+        reply = {
+          method: 'sendMessage',
+          chat_id: update.message.chat.id,
+          parse_mode: 'Markdown',
+          text: `I don't understand.`,
+        };
         break;
     }
 
     res.status(200).send(reply);
   } catch (err) {
-    req.log(err);
+    req.log.error(err);
     res.status(200).send({
       method: 'sendMessage',
       chat_id: req.body.message.chat.id,
